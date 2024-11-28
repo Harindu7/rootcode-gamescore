@@ -1,8 +1,8 @@
 package com.game.game.repositories;
 
-
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +15,11 @@ import com.game.game.entity.Score;
 public interface ScoreRepository extends JpaRepository<Score, Long> {
 
 	// 2. A REST API to obtain the user's highest scores in each game.
-	@Query("SELECT s FROM Score s WHERE s.user.id = :userId AND s.score = "
-			+ "(SELECT MAX(sub.score) FROM Score sub WHERE sub.game.id = s.game.id AND sub.user.id = :userId)")
-	List<Score> findHighestScoresByUser(@Param("userId") Long userId);
+	@Query("SELECT s FROM Score s " +
+		       "WHERE s.user.id = :userId AND s.score = " +
+		       "(SELECT MAX(sub.score) FROM Score sub WHERE sub.user.id = :userId AND sub.game.id = s.game.id)")
+		Page<Score> findHighestScoresByUser(@Param("userId") Long userId, Pageable pageable);
+
 
 	// Bonus : Create a REST API to sort and retrieve a game's top ten highest scores.
 	@Query("SELECT s FROM Score s WHERE s.game.id = :gameId ORDER BY s.score DESC")

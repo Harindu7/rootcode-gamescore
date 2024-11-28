@@ -21,11 +21,11 @@ public class User {
 	@Column(nullable = false, unique = true, length = 100)
 	private String email;
 
-	// Default constructor
+
 	public User() {
 	}
 
-	// Getters and Setters
+
 	public Long getId() {
 		return id;
 	}

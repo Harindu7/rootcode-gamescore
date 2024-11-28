@@ -3,6 +3,8 @@ package com.game.game.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
 
 import com.game.game.entity.Score;
 import com.game.game.services.ScoreService;
@@ -39,18 +43,26 @@ public class ScoreController {
 
 	// 2. A REST API to obtain the user's highest scores in each game.
 	@GetMapping("/user/{userId}/highest-scores")
-	public ResponseEntity<?> getUserHighestScores(@PathVariable Long userId) {
-		try {
-			List<Score> highestScores = scoreService.getUserHighestScores(userId);
-			if (highestScores.isEmpty()) {
-				return ResponseEntity.ok("No scores found for user with ID " + userId);
-			}
-			return ResponseEntity.ok(highestScores);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("An error occurred while fetching the highest scores: " + e.getMessage());
-		}
+	public ResponseEntity<?> getUserHighestScores(@PathVariable Long userId, 
+	                                              @RequestParam int page, 
+	                                              @RequestParam int size) {
+	    try {
+	       
+	        Pageable pageable = PageRequest.of(page, size); 
+	        Page<Score> highestScores = scoreService.getUserHighestScores(userId, pageable);
+	        
+	        if (highestScores.isEmpty()) {
+	            return ResponseEntity.ok("No scores found for user with ID " + userId);
+	        }
+
+	        return ResponseEntity.ok(highestScores.getContent()); 
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred while fetching the highest scores: " + e.getMessage());
+	    }
 	}
+
+
 
 	// Bonus : Create a REST API to sort and retrieve a game's top ten highest scores.
 	@GetMapping("/game/{gameId}/top-scores")

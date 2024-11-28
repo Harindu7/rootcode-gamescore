@@ -25,7 +25,7 @@ public class UserService {
 
 	// Create a new user
 	@CachePut(value = "users", key = "#user.id")
-	@CacheEvict(value = "usersAll", allEntries = true) // Clear cached user list
+	@CacheEvict(value = "usersAll", allEntries = true)
 	public User createUser(User user) {
 		return userRepository.save(user);
 	}
@@ -44,7 +44,7 @@ public class UserService {
 
 	// Update an existing user
 	@CachePut(value = "users", key = "#id")
-	@CacheEvict(value = "usersAll", allEntries = true) // Clear cached user list
+	@CacheEvict(value = "usersAll", allEntries = true) 
 	public User updateUser(Long id, User updatedUser) {
 		return userRepository.findById(id).map(user -> {
 			user.setUsername(updatedUser.getUsername());
@@ -54,8 +54,8 @@ public class UserService {
 	}
 
 	// Delete a user
-	@Caching(evict = { @CacheEvict(value = "users", key = "#id"), // Evict individual user cache
-			@CacheEvict(value = "usersAll", allEntries = true) // Clear cached user list
+	@Caching(evict = { @CacheEvict(value = "users", key = "#id"), 
+			@CacheEvict(value = "usersAll", allEntries = true)
 	})
 	public void deleteUser(Long id) {
 		if (userRepository.existsById(id)) {

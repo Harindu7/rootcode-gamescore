@@ -21,11 +21,11 @@ public class Game {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	// Default constructor
+
 	public Game() {
 	}
 
-	// Getters and Setters
+
 	public Long getId() {
 		return id;
 	}

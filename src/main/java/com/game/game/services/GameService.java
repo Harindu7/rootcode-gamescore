@@ -25,7 +25,7 @@ public class GameService {
 
 	// Create a new game
 	@CachePut(value = "games", key = "#game.id")
-	@CacheEvict(value = "gamesAll", allEntries = true) // Clear cached game list
+	@CacheEvict(value = "gamesAll", allEntries = true) 
 	public Game createGame(Game game) {
 		return gameRepository.save(game);
 	}
@@ -44,7 +44,7 @@ public class GameService {
 
 	// Update an existing game
 	@CachePut(value = "games", key = "#id")
-	@CacheEvict(value = "gamesAll", allEntries = true) // Clear cached game list
+	@CacheEvict(value = "gamesAll", allEntries = true) 
 	public Game updateGame(Long id, Game updatedGame) {
 		return gameRepository.findById(id).map(game -> {
 			game.setName(updatedGame.getName());
@@ -54,8 +54,8 @@ public class GameService {
 	}
 
 	// Delete a game
-	@Caching(evict = { @CacheEvict(value = "games", key = "#id"), // Evict individual game cache
-			@CacheEvict(value = "gamesAll", allEntries = true) // Clear cached game list
+	@Caching(evict = { @CacheEvict(value = "games", key = "#id"), 
+			@CacheEvict(value = "gamesAll", allEntries = true) 
 	})
 	public void deleteGame(Long id) {
 		if (gameRepository.existsById(id)) {

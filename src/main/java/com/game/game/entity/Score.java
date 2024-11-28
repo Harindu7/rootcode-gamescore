@@ -36,11 +36,11 @@ public class Score {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt = new Date();
 
-	// Default constructor
+
 	public Score() {
 	}
 
-	// Getters and Setters
+
 	public Long getId() {
 		return id;
 	}
